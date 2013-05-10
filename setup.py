@@ -7,7 +7,7 @@ setup(name='irccat3',
       author_email='jdboyd@jdboyd.net',
       url='https://github.com/jd-boyd/irccat3',
       packages=find_packages(),
-      install_requires=[],
+      install_requires=['argparse', 'irc'],
       tests_require=['nose'],
-      entry_points={'console_scripts': ['irccat3 = irccat3.main:main',]
+      entry_points={'console_scripts': ['irccat3 = irccat3.main:main',]}
      )
