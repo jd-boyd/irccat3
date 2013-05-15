@@ -23,7 +23,8 @@ Install, then run with the following options:
 
 ```
 usage: irccat3 [-h] [--verbosity VERBOSITY] [--irc-server IRC_SERVER]
-               [--irc-port IRC_PORT] [--listen-interface LISTEN_INTERFACE]
+               [--irc-port IRC_PORT] [--irc-channel IRC_CHANNEL]
+               [--listen-interface LISTEN_INTERFACE]
                [--listen-port LISTEN_PORT]
 
 optional arguments:
@@ -31,10 +32,13 @@ optional arguments:
   --verbosity VERBOSITY
                         increase output verbosity
   --irc-server IRC_SERVER
-                        increase output verbosity
-  --irc-port IRC_PORT   increase output verbosity
+                        IRC server to connect to.
+  --irc-port IRC_PORT   Port for irc server
+  --irc-channel IRC_CHANNEL
+                        IRC channel to publish to
   --listen-interface LISTEN_INTERFACE
-                        increase output verbosity
+                        network interface to listen on. Defaults to all of
+                        them.
   --listen-port LISTEN_PORT
-                        increase output verbosity
+                        Port to listen on (default 12345)
 ```

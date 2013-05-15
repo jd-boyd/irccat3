@@ -18,14 +18,18 @@ def get_args(argv):
 
     parser.add_argument("--verbosity", help="increase output verbosity")
 
-    parser.add_argument("--irc-server", help="increase output verbosity",
+    parser.add_argument("--irc-server", help="IRC server to connect to.",
                         default='localhost')
-    parser.add_argument("--irc-port", help="increase output verbosity",
+    parser.add_argument("--irc-port", help="Port for irc server",
                         type=int, default=6667)
+    parser.add_argument("--irc-channel", help="IRC channel to publish to",
+                        default='#irccat')
 
-    parser.add_argument("--listen-interface", help="increase output verbosity",
+    parser.add_argument("--listen-interface", 
+                        help="network interface to listen on.  Defaults to all of them.",
                         default='0.0.0.0')
-    parser.add_argument("--listen-port", help="increase output verbosity",
+    parser.add_argument("--listen-port", 
+                        help="Port to listen on (default 12345)",
                         type=int, default=12345)
 
     args = parser.parse_args(argv)
@@ -51,17 +55,14 @@ def main():
 
     q = Queue.Queue()
     
-    log.info('pre l start')
     l = listener.Listener(q, host=args.listen_interface, 
                           port=args.listen_port)
     l.start()
-    log.info('past l start')
 
-    b = bot.Bot(q, host=args.irc_server, port=args.irc_port)
+    b = bot.Bot(q, host=args.irc_server, port=args.irc_port, 
+                channel=args.irc_channel)
     b.start()
-    log.info('past b start')
-
 
     b.join()
-    
+    l.stop()
 

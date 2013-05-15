@@ -10,7 +10,6 @@ log = logging.getLogger(__name__)
 
 class IRCCat(irc.client.SimpleIRCClient):
     def __init__(self, target, q):
-        log.info('IC init')
         irc.client.SimpleIRCClient.__init__(self)
         self.target = target
         self.q = q
@@ -19,24 +18,23 @@ class IRCCat(irc.client.SimpleIRCClient):
         c.nick(c.get_nickname() + "_")
 
     def on_welcome(self, connection, event):
-        log.info('OW')
+        log.info('On welcome')
         if irc.client.is_channel(self.target):
             connection.join(self.target)
         else:
             self.send_it()
 
     def on_join(self, connection, event):
-        log.info('OJ')
+        log.info('On join')
         self.send_it()
 
     def on_disconnect(self, connection, event):
-        log.info('OD')
+        log.info('On disconnect')
         sys.exit(0)
 
     def send_it(self):
-        log.info('SI')
         while 1:
-            log.info('SPIN')
+            log.info('Bot waiting for message')
             try:
                 line = self.q.get(True, timeout=5)
             except Queue.Empty:
@@ -46,15 +44,15 @@ class IRCCat(irc.client.SimpleIRCClient):
         self.connection.quit("Using irc.client.py")
 
 class Bot(threading.Thread):
-    def __init__(self, q, host='localhost', port=6667):
+    def __init__(self, q, host='localhost', port=6667, channel="#irccat"):
         threading.Thread.__init__(self)
         self.q = q
         self.host = host
         self.port = port
+        self.channel = channel
     
     def run(self):
-        log.info("BR:")
-        c = IRCCat("#chat", self.q)
+        c = IRCCat(self.channel, self.q)
         c.connect(self.host, self.port, "catbot")
         c.start()
 
