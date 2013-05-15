@@ -3,6 +3,7 @@ import logging
 import sys
 import threading
 import time
+import Queue
 
 log = logging.getLogger(__name__)
 
@@ -13,6 +14,9 @@ class IRCCat(irc.client.SimpleIRCClient):
         irc.client.SimpleIRCClient.__init__(self)
         self.target = target
         self.q = q
+
+    def on_nicknameinuse(self, c, e):
+        c.nick(c.get_nickname() + "_")
 
     def on_welcome(self, connection, event):
         log.info('OW')
@@ -33,12 +37,16 @@ class IRCCat(irc.client.SimpleIRCClient):
         log.info('SI')
         while 1:
             log.info('SPIN')
-            line = self.q.get(True)
+            try:
+                line = self.q.get(True, timeout=5)
+            except Queue.Empty:
+                log.info('No msg')
+                continue
             self.connection.privmsg(self.target, line)
         self.connection.quit("Using irc.client.py")
 
 class Bot(threading.Thread):
-    def __init__(self, q, host='10.0.3.178', port=6667):
+    def __init__(self, q, host='localhost', port=6667):
         threading.Thread.__init__(self)
         self.q = q
         self.host = host
