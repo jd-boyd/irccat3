@@ -22,13 +22,14 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
                                                    client_address, server)
         
     def handle(self):
-        # self.rfile is a file-like object created by the handler;
-        # we can now use e.g. readline() instead of raw recv() calls
-        data = self.rfile.readline().strip()
-        log.info("%r wrote: %r", self.client_address[0], data)
-        # Likewise, self.wfile is a file-like object used to write back
-        # to the client
-        self.q.put(data)
+        run = True
+        while run:
+            data = self.rfile.readline().strip()
+            if not data:
+                break
+            log.info("%r wrote: %r", self.client_address[0], data)
+
+            self.q.put(data)
 
 class MyTcpServer(SocketServer.TCPServer):
     allow_reuse_address = True
@@ -45,7 +46,6 @@ class Listener(threading.Thread):
     def run(self):
 
         def handler_factory(*a, **kw):
-            log.info("HF %r %r", a, kw)
             handler = MyTCPHandler(*a, q=self.q)
 
         # Create the server, binding to localhost on port 9999
