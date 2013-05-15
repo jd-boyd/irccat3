@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import argparse
 import logging
+import multiprocessing
 import Queue
 import sys
 import threading
@@ -18,30 +19,36 @@ def get_args(argv):
 
     parser.add_argument("--irc-server", help="increase output verbosity")
     parser.add_argument("--irc-port", help="increase output verbosity",
-                        default='6666')
+                        type=int, default=6666)
 
     parser.add_argument("--listen-interface", help="increase output verbosity",
                         default='0.0.0.0')
     parser.add_argument("--listen-port", help="increase output verbosity",
-                        default='12345')
+                        type=int, default=12345)
 
-    parser.parse_args(argv)
+    args = parser.parse_args(argv)
 
-    return {}
+    return args
 
 def main():
 
-    logging.basicConfig()
+    logging.basicConfig(level=logging.DEBUG)
+    log.error('TP')
 
     args = get_args(sys.argv[1:])
 
     q = Queue.Queue()
+    #q = multiprocessing.Queue()
     
+    log.info('pre l start')
     l = listener.Listener(q)
     l.start()
+    log.info('past l start')
 
     b = bot.Bot(q)
     b.start()
+    log.info('past b start')
+
 
     b.join()
     
