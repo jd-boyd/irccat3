@@ -14,20 +14,6 @@ def send_stuff(host, port, stuff):
     client.send(stuff)
     client.close()
 
-def test_listener_thread():
-    q = Queue()
-    l = listener.TCPServer(q)
-    print "R:"
-    l.start()
-    time.sleep(0.1)
-    send_stuff('localhost', 9999, "#chat hello")
-    print "S:"
-
-    l.shutdown()
-
-    eq_(q.get(), "#chat hello")
-
-
 def test_listener():
     q = Queue()
     l = listener.TCPServer(q)

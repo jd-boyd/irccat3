@@ -5,14 +5,18 @@ import threading
 import time
 import Queue
 
+import listener
+
 log = logging.getLogger(__name__)
 
 
 class IRCCat(irc.client.SimpleIRCClient):
-    def __init__(self, target, q):
+    def __init__(self, target, q, l):
         irc.client.SimpleIRCClient.__init__(self)
         self.target = target
         self.q = q
+
+        self.l = l
 
     def on_nicknameinuse(self, c, e):
         c.nick(c.get_nickname() + "_")
@@ -36,26 +40,13 @@ class IRCCat(irc.client.SimpleIRCClient):
         while 1:
             log.debug('Bot waiting for message')
             try:
-                line = self.q.get(True, timeout=5)
+                self.l.wait_and_handle(0.5)
+                if self.q.empty():
+                    continue
+                line = self.q.get()
             except Queue.Empty:
                 log.debug('No msg')
                 continue
             self.connection.privmsg(self.target, line)
         self.connection.quit("Using irc.client.py")
 
-class Bot(threading.Thread):
-    def __init__(self, q, host='localhost', port=6667, channel="#irccat"):
-        threading.Thread.__init__(self)
-        self.q = q
-        self.host = host
-        self.port = port
-        self.channel = channel
-    
-    def run(self):
-        c = IRCCat(self.channel, self.q)
-        c.connect(self.host, self.port, "catbot")
-        c.start()
-
-    def stop(self):
-        #self.
-        pass

@@ -6,7 +6,6 @@ import multiprocessing
 import Queue
 import signal
 import sys
-import threading
 
 from irccat3 import bot, listener
 
@@ -36,33 +35,19 @@ def get_args(argv):
 
     return args
 
-l = None
-
-def signal_handler(signal, frame):
-    log.info('SIG %r', signal)
-    l.stop()
-    sys.exit(0)
-
 def main():
-
     logging.basicConfig(level=logging.INFO)
 
     args = get_args(sys.argv[1:])
 
     log.info('args: %r', args)
 
-    signal.signal(signal.SIGINT, signal_handler)
-
     q = Queue.Queue()
-    
-    l = listener.Listener(q, host=args.listen_interface, 
-                          port=args.listen_port)
-    l.start()
 
-    b = bot.Bot(q, host=args.irc_server, port=args.irc_port, 
-                channel=args.irc_channel)
-    b.start()
+    l = listener.TCPServer(q, args.listen_interface, args.listen_port)
 
-    b.join()
-    l.stop()
+    c = bot.IRCCat(args.irc_channel, q, l)
+    c.connect(args.irc_server, args.irc_port, "catbot")
+    c.start()
+
 
