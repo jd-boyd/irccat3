@@ -6,7 +6,7 @@ from irccat3 import main
 
 def test_get_args_defaults():
     r = main.get_args([])
-    eq_(r.irc_port, 6666)
+    eq_(r.irc_port, 6667)
 
 
 def test_get_args():
