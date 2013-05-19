@@ -34,11 +34,11 @@ class IRCCat(irc.client.SimpleIRCClient):
 
     def send_it(self):
         while 1:
-            log.info('Bot waiting for message')
+            log.debug('Bot waiting for message')
             try:
                 line = self.q.get(True, timeout=5)
             except Queue.Empty:
-                log.info('No msg')
+                log.debug('No msg')
                 continue
             self.connection.privmsg(self.target, line)
         self.connection.quit("Using irc.client.py")

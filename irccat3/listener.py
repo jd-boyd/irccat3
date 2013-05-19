@@ -34,7 +34,6 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 class MyTcpServer(SocketServer.TCPServer):
     allow_reuse_address = True
 
-#class Listener(multiprocessing.Process):
 class Listener(threading.Thread):
     def __init__(self, q, host='localhost', port=9999):
         threading.Thread.__init__(self)
