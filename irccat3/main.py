@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 def get_args(argv):
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--verbosity", help="increase output verbosity")
+    parser.add_argument("--verbose", help="increase output verbosity")
 
     parser.add_argument("--irc-server", help="IRC server to connect to.",
                         default='localhost')
@@ -36,9 +36,12 @@ def get_args(argv):
     return args
 
 def main():
-    logging.basicConfig(level=logging.INFO)
-
     args = get_args(sys.argv[1:])
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
     log.info('args: %r', args)
 
