@@ -1,25 +1,23 @@
-# Intro
+# IRCCat3
 
-I liked the idea of last.fm's irccat (https://github.com/RJ/irccat), but
-I didn't like the installation or setup and I continually had trouble with
-it on low resource VPS services.
+`netcat` stuff to IRC. 
 
-So, I decided to make my own in Python.  I found reference to a
-program call irccat2, which doesn't really do the same thing as
-irccat, so I called this one irccat3.
+IRCcat3 does one thing:
 
-# Comparison to irccat
+1) Listen on a specific ip:port and write incoming data to an IRC channel.
+   This is useful for sending various announcements and log messages to irc.
 
-Aside, from being in a new language, this also leaves out the ability
-to run external commands, as well as the ability to direct messages by
-prefixing them with #channel or @private_nick at the beginning.  At
-some point, I'd like to add the destination control, but I'm unlikely to
-implement running external commands.  It seems that if you want that, use
-a more full featured but like willie or hubot.
+IRCCat3 was inspired by irccat (https://github.com/RJ/irccat).  IRCcat
+removes features I don't care about and requires fewer resources.  Also, 
+I just don't have good luck with Java applications running in OpenVZ with
+venet networking, common to many VPSs.
+
+BTW, googling for irccat2 turned up a python example that isn't really
+like irccat.
 
 # Usage.
 
-Install, then run with the following options:
+Install (`pip install irccat3`), then run with the following options:
 
 ```
 usage: irccat3 [-h] [--verbosity VERBOSITY] [--irc-server IRC_SERVER]
@@ -41,4 +39,9 @@ optional arguments:
                         them.
   --listen-port LISTEN_PORT
                         Port to listen on (default 12345)
+```
+
+Once it is running connected to the IRC server, send messages to IRC by:
+```
+echo "Something just happened" | nc -q0 somemachine 12345
 ```
