@@ -35,7 +35,7 @@ class IRCCat(irc.client.SimpleIRCClient):
 
     def process_loop(self):
         while 1:
-            self.ircobj.process_once()
+            self.reactor.process_once()
             try:
                 self.l.wait_and_handle(0.5)
                 if self.q.empty():
