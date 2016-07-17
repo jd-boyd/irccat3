@@ -7,7 +7,7 @@ import threading
 import time
 import Queue
 
-import listener
+import irccat3.listener as listener
 
 log = logging.getLogger(__name__)
 
