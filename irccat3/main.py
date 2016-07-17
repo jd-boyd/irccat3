@@ -3,7 +3,11 @@ from __future__ import absolute_import, print_function
 import argparse
 import logging
 import multiprocessing
-import Queue
+
+try:
+    import Queue #py2
+except:
+    import queue as Queue #py3
 import signal
 import sys
 

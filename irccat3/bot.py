@@ -5,7 +5,11 @@ import logging
 import sys
 import threading
 import time
-import Queue
+try:
+    import Queue #py2
+except:
+    import queue as Queue #py3
+
 
 import irccat3.listener as listener
 

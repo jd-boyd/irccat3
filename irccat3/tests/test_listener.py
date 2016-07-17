@@ -1,6 +1,10 @@
 from __future__ import absolute_import, print_function
 
-from Queue import Queue
+try:
+    from Queue import Queue #py2
+except:
+    from queue import Queue #py3
+
 import socket
 import time
 
@@ -19,9 +23,9 @@ def test_listener():
     l = listener.TCPServer(q)
     print("R:")
     time.sleep(0.1)
-    send_stuff('localhost', 9999, "#chat hello")
+    send_stuff('localhost', 9999, b"#chat hello")
     print("S:")
 
     l.wait_and_handle(0.5)
 
-    eq_(q.get(), "#chat hello")
+    eq_(q.get(), b"#chat hello")
