@@ -1,3 +1,4 @@
+![TravisCI Status](https://travis-ci.org/jd-boyd/irccat3.png)
 # IRCCat3
 
 `netcat` stuff to IRC. 
